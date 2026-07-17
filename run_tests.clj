@@ -11,8 +11,7 @@
 
 (defn -main [& _]
   (let [fails (reduce (fn [acc s]
-                        (let [{:keys [exit]} (shell {:dir here :continue true}
-                                                    "bb" "--classpath" "src" s)]
+                        (let [{:keys [exit]} (shell {:dir here :continue true} "bb" s)]
                           (if (zero? exit) acc (conj acc s))))
                       [] suites)]
     (if (empty? fails)

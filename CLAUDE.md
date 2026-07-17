@@ -51,6 +51,9 @@ never collide on the inalienable Trust. External price ≠ internal access value
   only; new code and conformance tests must read EDN.
 - Source and tests must resolve from this standalone repository. Do not add `20-actors` or
   superproject-relative classpath dependencies.
+- The generic social membrane comes from the SHA-pinned
+  `com.etzhayyim/social-publication` dependency. Keep only actor identity and display text in
+  the local adapter; do not fork its invariant logic.
 - Never add an `owner`/`person`/PII field to `valuation` (G6). Never add a
   `license` value outside `{open, derived-only}` to a *published* record (G4).
   Never broaden `assetClass` beyond `external-market` (G5).
