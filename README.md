@@ -72,3 +72,6 @@ kenchi's scope entirely (G5 / toritate N12). The two actors never double-count.
 `bb run_tests.clj` → `methods/test_charter_gates.clj` pins the gates at the schema
 layer (PROVENANCE-OR-SILENCE, derived/aggregate license, NO-PII, inalienable-land
 exclusion, no single-source oracle). Pure stdlib, standalone-runnable.
+
+`manifest.edn` is the canonical actor manifest; `manifest.jsonld` remains a compatibility
+serialization. The suite also verifies the dry-run social publication membrane.

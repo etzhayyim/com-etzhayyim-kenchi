@@ -16,6 +16,7 @@
 (ns test-charter-gates
   (:require [clojure.test :refer [deftest is run-tests]]
             [clojure.java.io :as io]
+            [clojure.edn :as edn]
             [clojure.string :as str]
             [cheshire.core :as json]))
 
@@ -36,6 +37,7 @@
 (def ^:private lex-dir (io/file (find-root) "00-contracts" "lexicons" "com" "etzhayyim" "kenchi"))
 
 (defn- load-json [f] (json/parse-string (slurp f) true))
+(defn- load-edn [f] (edn/read-string (slurp f)))
 (defn- lex [name] (load-json (io/file lex-dir name)))
 (defn- record-props [doc] (get-in doc [:defs :main :record :properties]))
 (defn- required [doc] (set (get-in doc [:defs :main :record :required])))
@@ -69,9 +71,9 @@
       (str "G5: assetClass must be exactly " asset-classes)))
 
 (deftest g5-manifest-pins-inalienable-exclusion
-  (let [m (load-json (io/file actor-dir "manifest.jsonld"))
-        g5 (get-in m [:constitutionalGates :gates :G5])
-        n1 (get-in m [:nonGoals :goals :N1])]
+  (let [m (load-edn (io/file actor-dir "manifest.edn"))
+        g5 (get-in m ["constitutionalGates" "gates" "G5"])
+        n1 (get-in m ["nonGoals" "goals" "N1"])]
     (is (str/includes? (str/upper-case g5) "INALIENABLE") "G5 must be a named gate")
     (is (str/includes? g5 "2605192245") "G5 must cite the Land-Sovereignty ADR")
     (is (and (str/includes? n1 "Land Trust")

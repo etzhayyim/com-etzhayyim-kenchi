@@ -7,7 +7,7 @@
             [clojure.java.io :as io]))
 
 (def here (-> *file* io/file .getCanonicalFile .getParentFile))
-(def suites ["methods/test_charter_gates.clj"])
+(def suites ["methods/test_charter_gates.clj" "methods/test_social.clj"])
 
 (defn -main [& _]
   (let [fails (reduce (fn [acc s]
