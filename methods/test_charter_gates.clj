@@ -17,8 +17,9 @@
   (:require [clojure.test :refer [deftest is run-tests]]
             [clojure.java.io :as io]
             [clojure.edn :as edn]
+            [clojure.walk :as walk]
             [clojure.string :as str]
-            [cheshire.core :as json]))
+            ))
 
 (def publish-licenses #{"open" "derived-only"})            ; G4: never raw/restricted
 (def pii-tokens ["owner" "person" "occupant" "resident" "pii" "ssn" "name"])  ; G6
@@ -27,18 +28,9 @@
 (def ^:private script-dir (-> *file* io/file .getCanonicalFile .getParentFile))
 (def ^:private actor-dir (.getParentFile script-dir))
 
-(defn- find-root []
-  (loop [d actor-dir]
-    (cond
-      (nil? d) (throw (ex-info "could not locate 00-contracts/lexicons/com/etzhayyim/kenchi" {}))
-      (.isDirectory (io/file d "00-contracts" "lexicons" "com" "etzhayyim" "kenchi")) d
-      :else (recur (.getParentFile d)))))
-
-(def ^:private lex-dir (io/file (find-root) "00-contracts" "lexicons" "com" "etzhayyim" "kenchi"))
-
-(defn- load-json [f] (json/parse-string (slurp f) true))
 (defn- load-edn [f] (edn/read-string (slurp f)))
-(defn- lex [name] (load-json (io/file lex-dir name)))
+(def ^:private lex-dir (io/file actor-dir "lex"))
+(defn- lex [name] (walk/keywordize-keys (load-edn (io/file lex-dir name))))
 (defn- record-props [doc] (get-in doc [:defs :main :record :properties]))
 (defn- required [doc] (set (get-in doc [:defs :main :record :required])))
 (defn- known [props k] (set (get-in props [k :knownValues])))
@@ -53,21 +45,21 @@
 ;; ─────────────────────────────────── gates ───────────────────────────────────
 
 (deftest g3-provenance-or-silence
-  (let [v (lex "valuation.json") req (required v) props (record-props v)]
+  (let [v (lex "valuation.edn") req (required v) props (record-props v)]
     (doseq [f ["provenance" "nComps" "nAuthorities" "ciLoUsd" "ciHiUsd" "valueUsd"]]
       (is (contains? req f) (str "G3: valuation must require " f)))
     (is (= 3 (get-in props [:nComps :minimum])) "G3: nComps minimum must be 3")
     (is (= 2 (get-in props [:nAuthorities :minimum])) "G3: nAuthorities minimum must be 2")))
 
 (deftest g4-published-license-is-open-or-derived-only
-  (doseq [name ["valuation.json" "regionReport.json"]]
+  (doseq [name ["valuation.edn" "regionReport.edn"]]
     (is (= publish-licenses (known (record-props (lex name)) :license))
         (str "G4: " name " license must be exactly " publish-licenses)))
-  (is (contains? (known (record-props (lex "sourceLicense.json")) :licenseClass) "restricted")
+  (is (contains? (known (record-props (lex "sourceLicense.edn")) :licenseClass) "restricted")
       "G4: sourceLicense must still represent 'restricted' sources"))
 
 (deftest g5-asset-class-is-external-market-only
-  (is (= asset-classes (known (record-props (lex "valuation.json")) :assetClass))
+  (is (= asset-classes (known (record-props (lex "valuation.edn")) :assetClass))
       (str "G5: assetClass must be exactly " asset-classes)))
 
 (deftest g5-manifest-pins-inalienable-exclusion
@@ -81,12 +73,12 @@
         "N1 must exclude Land-Trust valuation")))
 
 (deftest g6-no-pii-fields-anywhere-in-valuation
-  (let [names (map str/lower-case (all-prop-names (lex "valuation.json")))
+  (let [names (map str/lower-case (all-prop-names (lex "valuation.edn")))
         leaked (sort (filter (fn [n] (some #(str/includes? n %) pii-tokens)) names))]
     (is (empty? leaked) (str "G6: PII-like fields must not exist on valuation: " leaked))))
 
 (deftest n8-no-single-source-oracle
-  (let [pa (lex "provenanceAttestation.json") req (required pa)]
+  (let [pa (lex "provenanceAttestation.edn") req (required pa)]
     (doseq [f ["nAuthorities" "nComps" "verdict" "comps"]]
       (is (contains? req f) (str "N8: provenanceAttestation must require " f)))
     (is (= #{"published" "withheld-mrv" "insufficient-evidence"}

@@ -57,7 +57,7 @@ corroborate, and the publish gate refuses false precision.
 ## 4 Lexicons (`com.etzhayyim.kenchi.*`)
 
 `valuation` · `regionReport` · `provenanceAttestation` · `sourceLicense` —
-under `00-contracts/lexicons/com/etzhayyim/kenchi/`.
+under `lex/`.
 
 ## Sibling boundary — toritate (執帳)
 
@@ -73,5 +73,5 @@ kenchi's scope entirely (G5 / toritate N12). The two actors never double-count.
 layer (PROVENANCE-OR-SILENCE, derived/aggregate license, NO-PII, inalienable-land
 exclusion, no single-source oracle). Pure stdlib, standalone-runnable.
 
-`manifest.edn` is the canonical actor manifest; `manifest.jsonld` remains a compatibility
+`manifest.edn` is the canonical actor manifest; external JSON is retained only as a wire
 serialization. The suite also verifies the dry-run social publication membrane.

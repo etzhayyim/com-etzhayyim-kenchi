@@ -1,0 +1,12 @@
+{:dependencies
+ [{:dependency/id etzhayyim/root
+   :dependency/repository "https://github.com/etzhayyim/root"
+   :dependency/revision "33532811bc4f544d82de673362c8745887502667"
+   :dependency/paths ["90-docs/adr"]
+   :dependency/purpose #{:adr :governance}}
+  {:dependency/id com.etzhayyim/toritate
+   :dependency/repository "https://github.com/etzhayyim/com-etzhayyim-toritate"
+   :dependency/revision "3354850aa05408e840426f91fe067ddad8535e5b"}
+  {:dependency/id com.etzhayyim/social-publication
+   :dependency/repository "https://github.com/etzhayyim/com-etzhayyim-social-publication"
+   :dependency/revision "e8127d0661284b1c12ce1b216c84b5ed2db619ab"}]}

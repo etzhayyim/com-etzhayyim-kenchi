@@ -1,4 +1,4 @@
-# 20-actors/kenchi — CLAUDE.md
+# com-etzhayyim-kenchi — CLAUDE.md
 
 ## Identity
 
@@ -44,10 +44,10 @@ never collide on the inalienable Trust. External price ≠ internal access value
 
 ## Editing rules
 
-- The lexicons live in `00-contracts/lexicons/com/etzhayyim/kenchi/`. The
+- The lexicons live in `lex/`. The
   charter-gate test (`methods/test_charter_gates.clj`) pins the gates against
   them — keep them in sync. Run `bb run_tests.clj` before committing.
-- `manifest.edn` is the canonical actor manifest. `manifest.jsonld` is compatibility input
+- `manifest.edn` is the canonical actor manifest; JSON is emitted only under `wire/`
   only; new code and conformance tests must read EDN.
 - Source and tests must resolve from this standalone repository. Do not add `20-actors` or
   superproject-relative classpath dependencies.
