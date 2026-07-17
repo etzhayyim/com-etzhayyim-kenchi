@@ -47,6 +47,10 @@ never collide on the inalienable Trust. External price ≠ internal access value
 - The lexicons live in `00-contracts/lexicons/com/etzhayyim/kenchi/`. The
   charter-gate test (`methods/test_charter_gates.clj`) pins the gates against
   them — keep them in sync. Run `bb run_tests.clj` before committing.
+- `manifest.edn` is the canonical actor manifest. `manifest.jsonld` is compatibility input
+  only; new code and conformance tests must read EDN.
+- Source and tests must resolve from this standalone repository. Do not add `20-actors` or
+  superproject-relative classpath dependencies.
 - Never add an `owner`/`person`/PII field to `valuation` (G6). Never add a
   `license` value outside `{open, derived-only}` to a *published* record (G4).
   Never broaden `assetClass` beyond `external-market` (G5).

@@ -7,11 +7,12 @@
             [clojure.java.io :as io]))
 
 (def here (-> *file* io/file .getCanonicalFile .getParentFile))
-(def suites ["methods/test_charter_gates.clj"])
+(def suites ["methods/test_charter_gates.clj" "methods/test_social.clj"])
 
 (defn -main [& _]
   (let [fails (reduce (fn [acc s]
-                        (let [{:keys [exit]} (shell {:dir here :continue true} "bb" s)]
+                        (let [{:keys [exit]} (shell {:dir here :continue true}
+                                                    "bb" "--classpath" "src" s)]
                           (if (zero? exit) acc (conj acc s))))
                       [] suites)]
     (if (empty? fails)
